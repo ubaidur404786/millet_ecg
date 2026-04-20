@@ -59,7 +59,7 @@ class MILLETModel:
         )
         # Early stopping setup
         best_net = None
-        best_loss = np.Inf
+        best_loss = np.inf
         # Train over multiple epochs
         for _ in custom_tqdm(range(n_epochs), desc="Training model"):
             self.net.train()
@@ -134,9 +134,9 @@ class MILLETModel:
         return all_results
 
     def evaluate_interpretability(
-        self,
-        dataset: MILTSCDataset,
-    ) -> Tuple[float, Optional[float]]:
+    self,
+    dataset: MILTSCDataset,
+) -> Tuple[float, Optional[float]]:
         all_aopcrs = []
         all_ndcgs = []
         # Don't need to worry about batch size being too big during evaluation (only training)
@@ -148,18 +148,20 @@ class MILLETModel:
                 # Calculate AOPCR for batch
                 batch_aopcr, _, _ = calculate_aopcr(self, bags, verbose=False)
                 all_aopcrs.extend(batch_aopcr.tolist())
-                # Calculate NDCG@n for batch if instance targets are present
-                if "instance_targets" in batch:
+                # Calculate NDCG@n for batch ONLY if instance targets are present AND valid
+                if "instance_targets" in batch and batch["instance_targets"] is not None:
                     batch_instance_targets = batch["instance_targets"]
                     all_instance_importance_scores = self.interpret(self(bags))
                     for bag_idx, bag in enumerate(bags):
                         target = batch_targets[bag_idx]
                         instance_targets = batch_instance_targets[bag_idx]
-                        ndcg = calculate_ndcg_at_n(
-                            all_instance_importance_scores[bag_idx, target],
-                            instance_targets,
-                        )
-                        all_ndcgs.append(ndcg)
+                        # Check if there are any positive instance targets
+                        if torch.sum(instance_targets) > 0:
+                            ndcg = calculate_ndcg_at_n(
+                                all_instance_importance_scores[bag_idx, target],
+                                instance_targets,
+                            )
+                            all_ndcgs.append(ndcg)
         avg_aopcr = np.mean(all_aopcrs)
         avg_ndcg = float(np.mean(all_ndcgs)) if len(all_ndcgs) > 0 else None
         return float(avg_aopcr), avg_ndcg
