@@ -6,7 +6,7 @@ Main objective for this work:
 
 - show how MILLET interpretation works on ECG5000
 - not to fully optimize minority-class performance yet
-
+- Helping Material: https://github.com/JAEarly/MILTimeSeriesClassification/tree/master 
 ---
 
 ## 1) Project structure (important files/folders)
