@@ -4,9 +4,9 @@ This README is a simple write-up of what I did in `notebooks/ecg.ipynb`.
 
 Main objective for this work:
 
-- show how MILLET interpretation works on ECG5000
+- show how MILLET interpretation works on ECG5000 (Helping Material: https://github.com/JAEarly/MILTimeSeriesClassification/tree/master )
 - not to fully optimize minority-class performance yet
-- Helping Material: https://github.com/JAEarly/MILTimeSeriesClassification/tree/master 
+
 ---
 
 ## 1) Project structure (important files/folders)
